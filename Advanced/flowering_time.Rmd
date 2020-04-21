@@ -1,0 +1,45 @@
+---
+title: "Flowering Time"
+author: "Cassandra"
+date: "4/21/2020"
+output: 
+  html_document: 
+    keep_md: yes
+---
+
+```{r}
+library(tidyverse)
+data <- read.csv("master_flowering_time_data_2019_10_15.csv")
+```
+
+## Data discovery
+
+**Redundant variables? Related variables? Experimental setup?**  
+
+```{r}
+head(data)
+```
+
+Looks like `group` and `condition` are redundant within `row` and `field_ID`. Also `row` is redundant within `field_ID`. 
+
+```{r}
+summary(data)
+data %>% filter(genotype == "elf3") %>% summary()
+```
+
+Experimental setup appears to be four planting groups, each with all combinations of genotype (WT | elf3) and condition (sun | shade).
+
+**Does variable parsing make sense? Is data format consistent within variables? Easier ways to parse?**   
+
+```{r}
+str(data)
+```
+
+Well, dates might be easier to work with when formatted as dates. Also, `direction` appears to have a mix of data formats.
+ 
+**Suggestions for new variables?**    
+
+  * Days to anthesis   
+  * Days to flowering   
+
+
