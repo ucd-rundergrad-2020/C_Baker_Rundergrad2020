@@ -39,7 +39,13 @@ Well, dates might be easier to work with when formatted as dates. Also, `directi
  
 **Suggestions for new variables?**    
 
-  * Days to anthesis   
   * Days to flowering   
+  * Length of flowering    
 
 
+### Check out `diff_time`?
+
+for next week: 
+
+* load and parse everything  
+* calculate germination to flowering time   
