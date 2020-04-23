@@ -276,15 +276,15 @@ Where are the `NA` values located?
 ```
 
 ```
-##   [1]  TRUE  TRUE FALSE  TRUE  TRUE FALSE  TRUE FALSE FALSE  TRUE FALSE FALSE
-##  [13]  TRUE FALSE  TRUE  TRUE FALSE FALSE  TRUE FALSE  TRUE  TRUE FALSE  TRUE
-##  [25]  TRUE  TRUE FALSE FALSE  TRUE FALSE FALSE  TRUE FALSE  TRUE  TRUE FALSE
-##  [37]  TRUE  TRUE FALSE  TRUE FALSE FALSE FALSE  TRUE FALSE  TRUE FALSE FALSE
-##  [49] FALSE FALSE FALSE FALSE FALSE  TRUE FALSE  TRUE  TRUE  TRUE FALSE FALSE
-##  [61] FALSE  TRUE FALSE  TRUE FALSE FALSE FALSE FALSE FALSE  TRUE  TRUE FALSE
-##  [73] FALSE FALSE FALSE  TRUE  TRUE  TRUE FALSE FALSE FALSE FALSE  TRUE FALSE
-##  [85]  TRUE FALSE FALSE  TRUE FALSE FALSE FALSE  TRUE FALSE  TRUE FALSE  TRUE
-##  [97]  TRUE  TRUE FALSE FALSE
+##   [1]  TRUE  TRUE  TRUE  TRUE FALSE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE
+##  [13] FALSE  TRUE  TRUE FALSE  TRUE FALSE FALSE FALSE FALSE  TRUE  TRUE FALSE
+##  [25]  TRUE FALSE FALSE  TRUE  TRUE FALSE  TRUE  TRUE FALSE FALSE  TRUE  TRUE
+##  [37]  TRUE FALSE  TRUE  TRUE  TRUE  TRUE FALSE  TRUE FALSE FALSE  TRUE  TRUE
+##  [49] FALSE FALSE  TRUE  TRUE  TRUE FALSE  TRUE  TRUE FALSE FALSE  TRUE FALSE
+##  [61] FALSE FALSE  TRUE  TRUE  TRUE FALSE FALSE FALSE  TRUE  TRUE  TRUE FALSE
+##  [73] FALSE  TRUE  TRUE FALSE FALSE FALSE  TRUE  TRUE  TRUE FALSE  TRUE  TRUE
+##  [85]  TRUE  TRUE FALSE FALSE  TRUE FALSE  TRUE FALSE FALSE FALSE FALSE FALSE
+##  [97]  TRUE FALSE FALSE FALSE
 ```
 
 `NA` is a placeholder, but not a true value. Be careful when working with `NA` in logical expressions because it can pollute the output.  
@@ -296,7 +296,7 @@ sum(my_na)
 ```
 
 ```
-## [1] 43
+## [1] 55
 ```
 
 `NaN` is an indicator for something that is not a number.  
@@ -329,8 +329,8 @@ x[1:10]
 ```
 
 ```
-##  [1]  0.4691343         NA -1.2076483         NA -0.1123363         NA
-##  [7]         NA -0.2772630         NA -1.0376248
+##  [1]  0.8161476         NA         NA  0.6706527         NA         NA
+##  [7]  0.7689296 -1.4211292 -0.4795906  1.8439672
 ```
 
 Make sure that you are subsetting for something within your dataset because R will not stop you from asking for an element that doesn't exist.       
@@ -354,8 +354,8 @@ y[y > 0]
 ```
 
 ```
-## [1] 0.4691343 0.4031867 1.8285717 0.7180715 0.6677884 0.8668702 0.1219628
-## [8] 0.9679393
+##  [1] 0.8161476 0.6706527 0.7689296 1.8439672 0.5343108 0.4273388 1.0117465
+##  [8] 0.7898004 1.2278510 0.3289810 0.1257931
 ```
 
 Multiple expressions can be used for simultaneous subsetting.  
@@ -365,8 +365,8 @@ x[!is.na(x) & x > 0]
 ```
 
 ```
-## [1] 0.4691343 0.4031867 1.8285717 0.7180715 0.6677884 0.8668702 0.1219628
-## [8] 0.9679393
+##  [1] 0.8161476 0.6706527 0.7689296 1.8439672 0.5343108 0.4273388 1.0117465
+##  [8] 0.7898004 1.2278510 0.3289810 0.1257931
 ```
 
 When subsetting, remove specific elements with `-`.  
@@ -377,13 +377,13 @@ x[-c(2, 10)]
 ```
 
 ```
-##  [1]  0.46913430 -1.20764828          NA -0.11233633          NA          NA
-##  [7] -0.27726305          NA          NA -0.71456997          NA          NA
-## [13] -1.51143457 -0.03104463          NA -0.62136557          NA          NA
-## [19]  0.40318666          NA          NA          NA -0.72680075          NA
-## [25]          NA  1.82857169          NA          NA  0.71807154 -1.57307549
-## [31]          NA -0.07685980          NA  0.66778836  0.86687022  0.12196278
-## [37]  0.96793932 -0.66929724
+##  [1]  0.8161476         NA  0.6706527         NA         NA  0.7689296
+##  [7] -1.4211292 -0.4795906 -1.1560628         NA -0.1415546  0.5343108
+## [13]         NA -1.1769119  0.4273388  1.0117465  0.7898004 -1.8630875
+## [19]         NA         NA         NA         NA         NA -0.1904667
+## [25]  1.2278510         NA         NA  0.3289810         NA         NA
+## [31]         NA         NA  0.1257931         NA         NA         NA
+## [37] -0.6024208 -0.3145400
 ```
 
 Named vectors have names assigned to the values.   
