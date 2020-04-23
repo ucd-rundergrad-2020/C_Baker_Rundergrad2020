@@ -30,28 +30,28 @@ dput(mtcars)
 
 #### 3.2.4   
 
-1. Run `ggplot(data = mpg)`. What do you see?  
+**1. Run `ggplot(data = mpg)`. What do you see?**  
 ```{r}
 ggplot(data = mpg)
 ```
 
    This seems to make an empty graph space.  
 
-2. How many rows are in `mpg`? How many columns?  
+**2. How many rows are in `mpg`? How many columns?**  
 ```{r}
 dim(mpg)
 ```
 
-3. What does the `drv` variable describe? Read the help for `?mpg` to find out.   
+**3. What does the `drv` variable describe? Read the help for `?mpg` to find out.**   
   `drv` describes drive train with three categories: front-wheel drive, rear-wheel drive, and four-wheel drive.    
 
-4. Make a scatterplot of `hwy` vs `cyl`.   
+**4. Make a scatterplot of `hwy` vs `cyl`.**   
 ```{r}
 ggplot(mpg) + 
   geom_point(aes(hwy, cyl))
 ```
 
-5. What happens if you make a scatterplot of `class` vs `drv`? Why is the plot not useful?   
+**5. What happens if you make a scatterplot of `class` vs `drv`? Why is the plot not useful?**   
 ```{r}
 ggplot(mpg) + 
   geom_point(aes(class, drv))
@@ -61,7 +61,7 @@ ggplot(mpg) +
 
 #### 3.3.1
 
-1. What's gone wrong with this code? Why are the points not blue?  
+**1. What's gone wrong with this code? Why are the points not blue?**  
 ```{r}
 ggplot(mpg) + 
   geom_point(aes(displ, hwy, color = "blue"))
@@ -69,7 +69,7 @@ ggplot(mpg) +
 
   The `color` assignment is within the `aes` settings, so R is looking for a "blue" variable to map to color.  
 
-2. Which variables in mpg are categorical? Which variables are continuous? (Hint: type `?mpg` to read the documentation for the dataset). How can you see this information when you run `mpg`?    
+**2. Which variables in mpg are categorical? Which variables are continuous? (Hint: type `?mpg` to read the documentation for the dataset). How can you see this information when you run `mpg`?**    
 
   Categorical 
 
@@ -91,7 +91,7 @@ head(mpg)
 ```
  Looks like you can generally tell by data type, although I would argue that `cyl` is categorical even though R reads it as an integer.   
  
-3. Map a continuous variable to `color`, `size`, and `shape`. How do these aesthetics behave differently for categorical vs continuous variables?    
+**3. Map a continuous variable to `color`, `size`, and `shape`. How do these aesthetics behave differently for categorical vs continuous variables?**    
 ```{r}
 ggplot(mpg) + 
   geom_point(aes(displ, hwy, color = cty, size = cty))
@@ -99,13 +99,13 @@ ggplot(mpg) +
 
   For categorical variables `color` and `size` are assigned to discrete levels, but they are scaled as gradients for continuous variables. `shape` works for categorical variables but cannot be used for continuous variables.   
   
-4. What happens if you map the same variable to multiple aesthetics?    
+**4. What happens if you map the same variable to multiple aesthetics?**    
   Since I did that above, you can see that those aesthetics are all applied to the variable simultaneously.   
   
-5. What does the `stroke` aesthetic do? What shapes does it work with? (Hint: use `?geom_point`)   
+**5. What does the `stroke` aesthetic do? What shapes does it work with? (Hint: use `?geom_point`)**   
   Based on `vignette("ggplot2-specs")` it looks like `stroke` controls the size of the black outline of the shape. This only works with shapes 21-24.   
   
-6. What happens if you map an aesthetic to something other than a variable name, like `aes(color = displ < 5)`? Note, you'll also need to specify x and y.   
+**6. What happens if you map an aesthetic to something other than a variable name, like `aes(color = displ < 5)`? Note, you'll also need to specify x and y.**   
 ```{r}
 ggplot(mpg) + 
   geom_point(aes(displ, hwy, color = displ < 5))
@@ -115,7 +115,7 @@ ggplot(mpg) +
 
 #### 3.5.1 
 
-1. What happens if you facet on a continuous variable?   
+**1. What happens if you facet on a continuous variable?**   
 ```{r}
 ggplot(mpg) + 
   geom_point(aes(cty, hwy)) + 
@@ -124,7 +124,7 @@ ggplot(mpg) +
 
   Looks like R makes facets for every value of a continuous variable.   
   
-2. What do the empty cells in plot with `facet_grid(drv ~ cyl)` mean? How do they relate to this plot?  
+**2. What do the empty cells in plot with `facet_grid(drv ~ cyl)` mean? How do they relate to this plot?**  
 ```{r}
 ggplot(mpg) + 
   geom_point(aes(drv, cyl))
@@ -138,7 +138,7 @@ ggplot(mpg) +
 
   Empty cells are places that don't contain an intersection of points between `drv` and `cyl`, as seen in the initial scatterplot.  
   
-3. What plots does the following code make? What does `.` do?    
+**3. What plots does the following code make? What does `.` do?**    
 ```{r}
 # displ by hwy, rows of drv facets
 ggplot(mpg) + 
@@ -153,22 +153,22 @@ ggplot(mpg) +
 
   The `.` in `facet_grid()` serves as a placeholder to leave out facets in either the rows or columns. This essentially turns `facet_grid()` into `facet_wrap()` with a set orientation.   
   
-4. Take the first faceted plot in this section:   
+**4. Take the first faceted plot in this section:**   
 ```{r}
 ggplot(mpg) + 
   geom_point(aes(displ, hwy)) + 
   facet_wrap(~ class, nrow = 2)
 ```
 
-What are the advantages to using faceting instead of the color aesthetic? What are the disadvantages? How might the balance change if you had a larger dataset.  
+**What are the advantages to using faceting instead of the color aesthetic? What are the disadvantages? How might the balance change if you had a larger dataset.**  
 
   The advantage of faceting is that each faceted group is separated onto its own plot so it's easier to look for trends within groups. The disadvantage of faceting is that each faceted group is separated onto its own plot so it's more difficult to directly compare values between groups. Faceting is probably more helpful with a larger dataset, where you're more likely to have an unintelligible blob of colored points all overlapping with each other.  
   
-5. Read `?facet_wrap`. What does `nrow` do? What does `ncol` do? What other options control the layout of the individual panels? Why doesn't `facet_grid()` have `nrow` and `ncol` arguments?     
+**5. Read `?facet_wrap`. What does `nrow` do? What does `ncol` do? What other options control the layout of the individual panels? Why doesn't `facet_grid()` have `nrow` and `ncol` arguments?**     
 
   The number of facet rows is controlled by `nrow` and the number of facet columns is controlled by `ncol`. To swap which facet contains the highest values, use `as.table`. There aren't `nrow` and `ncol` arguments for `facet_grid()` because the number of rows and columns are determined by the number of levels of the variable assigned to that dimension.     
   
-6. When using `facet_grid()` you should usually put the variable with more unique levels in the columns. Why?    
+**6. When using `facet_grid()` you should usually put the variable with more unique levels in the columns. Why?**    
 ```{r}
 ggplot(mpg) + 
   geom_point(aes(displ, hwy)) + 
@@ -183,14 +183,14 @@ ggplot(mpg) +
 
 #### 3.6.1 
 
-1. What geom would you use to draw a line chart? A boxplot? A histogram? An area chart?    
+**1. What geom would you use to draw a line chart? A boxplot? A histogram? An area chart?**    
 
   * Line chart: `geom_line()`   
   * Boxplot: `geom_boxplot()`    
   * Histogram: `geom_histogram()`   
   * Area chart: `geom_area()`    
 
-2. Run this code in your head and predict what the output will look like. Then, run the code in R and check the predictions.    
+**2. Run this code in your head and predict what the output will look like. Then, run the code in R and check the predictions.**    
 ```
 ggplot(mpg, aes(displ, hwy, color = drv)) + 
   geom_point() + 
@@ -204,13 +204,13 @@ ggplot(mpg, aes(displ, hwy, color = drv)) +
   geom_smooth(se = FALSE)
 ```
 
-3. What does `show.legend = FALSE` do? What happens if you remove it? Why do you think I used it earlier in the chapter?    
+**3. What does `show.legend = FALSE` do? What happens if you remove it? Why do you think I used it earlier in the chapter?**    
   With `show.legend = FALSE`, the legend for aesthetic mappings will be missing. If you remove it, you would see a legend of aesthetic values. It was probably used earlier in the chapter to keep all the graphs the same size and more cleanly demonstrate how aesthetics group the same as `group` does.   
   
-4. What does the `se` argument to `geom_smooth()` do?    
+**4. What does the `se` argument to `geom_smooth()` do?**    
   The `se` argument determines whether or not the confidence interval is shaded around the trend line. This is set to `TRUE` by default, so there will be confidence interval shading by default.    
   
-5. Will these two graphs look different? Why/why not?    
+**5. Will these two graphs look different? Why/why not?**    
 ```
 ggplot(mpg, aes(displ, hwy)) + 
   geom_point() + 
@@ -223,7 +223,7 @@ ggplot() +
 
   These two graphs will look the same because they have the same `geom` layers and mapping specifications. The first one is just more efficient because it sets aesthetics in the `ggplot()` call instead of separately setting the same aesthetics in each `geom` layer.    
   
-6. Recreate the R code necessary to generate the following graphs.    
+**6. Recreate the R code necessary to generate the following graphs.**    
 ```{r fig.width=4, fig.height=2.5, fig.show='hold'}
 # left 
 ggplot(mpg, aes(displ, hwy)) + 
