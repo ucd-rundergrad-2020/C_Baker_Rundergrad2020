@@ -645,4 +645,4 @@ str(diamonds)
 
 
 [Rundergrad-Github]: https://github.com/ucd-rundergrad-2020
-[Kit]: Week1/sleeping_kit.jpg
+[Kit]: sleeping_kit.jpg
