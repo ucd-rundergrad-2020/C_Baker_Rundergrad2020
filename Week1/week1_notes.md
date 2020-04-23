@@ -645,4 +645,4 @@ str(diamonds)
 
 
 [Rundergrad-Github]: https://github.com/ucd-rundergrad-2020
-[Kit]: C:/Users/contr/OneDrive - UC Davis/R_Club/R_Undergrad/C_Baker_Rundergrad2020/Week1/sleeping_kit.jpg
+[Kit]: Week1/sleeping_kit.jpg
