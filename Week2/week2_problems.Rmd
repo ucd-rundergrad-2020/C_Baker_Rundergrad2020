@@ -260,3 +260,10 @@ ggplot(mpg, aes(displ, hwy)) +
   geom_point(aes(color = drv), size = 3)
 ```
 
+```{r}
+# let's try the last figure with stroke instead 
+ggplot(mpg, aes(displ, hwy)) + 
+  geom_point(aes(fill = drv), size = 4, shape = 21, stroke = 3, color = "white")
+```
+
+I think layering `geom_point()` creates the effect more similarly than using `stroke` because the white appears to be below the color in the original graph. When using `stroke`, both the `fill` and `color` are on the same level instead, causing the white to overlap with the coloring. 
