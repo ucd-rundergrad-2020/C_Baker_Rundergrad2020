@@ -1,0 +1,27 @@
+unnamed-chunk-1	library
+unnamed-chunk-2	==	>	aes	carat	cyl	diamonds	displ	filter	geom_point	ggplot	hwy	mpg
+unnamed-chunk-3	%>%	>=	aes	arr_delay	filter	flights	geom_histogram	ggplot	xlim
+unnamed-chunk-4	%>%	aes	c	filter	flights	geom_histogram	ggplot	month
+unnamed-chunk-5	%>%	<=	>	aes	arr_delay	dep_delay	filter	flights	geom_point	ggplot
+unnamed-chunk-6	%>%	|	<=	==	aes	dep_time	filter	flights	geom_histogram	ggplot
+unnamed-chunk-7	%>%	aes	between	filter	flights	geom_histogram	ggplot	month
+unnamed-chunk-8	$	%>%	flights	is.na	sum	summary
+unnamed-chunk-9	%>%	arrange	dep_time	desc	flights	head	is.na
+unnamed-chunk-10	%>%	arr_delay	arrange	dep_delay	desc	flights	head	print
+unnamed-chunk-11	%>%	air_time	arrange	desc	distance	flights	mutate	print	speed
+unnamed-chunk-12	%>%	arrange	desc	distance	flights	print
+unnamed-chunk-13	%>%	arr_delay	arr_time	c	contains	dep_delay	dep_time	ends_with	flights	head	select	starts_with
+unnamed-chunk-14	%>%	air_time	distance	flights	head	select
+unnamed-chunk-15	%>%	c	flights	head	one_of	select
+unnamed-chunk-16	contains	flights	select
+unnamed-chunk-17	contains	flights	select
+unnamed-chunk-18	%>%	dep_time	flights	mutate	print	sched_dep_time
+unnamed-chunk-19	%>%	air_time	arr_time	dep_time	flights	head	mutate	select
+unnamed-chunk-20	%>%	dep_delay	dep_time	flights	head	mutate	sched_dep_time	select
+unnamed-chunk-21	%>%	arr_delay	arrange	delay_rank	desc	flights	min_rank	mutate	print
+unnamed-chunk-22	
+unnamed-chunk-23	
+unnamed-chunk-24	!	%>%	arr_delay	arrange	carrier	dep_delay	desc	filter	flights	group_by	is.na	mean	mean(arr_delay)	summarise
+unnamed-chunk-25	%>%	~	aes	arr_delay	c	carrier	dest	distance	facet_wrap	filter	geom_point	ggplot	not_cancelled
+unnamed-chunk-26	%>%	~	aes	arr_delay	c	carrier	dest	distance	facet_wrap	filter	geom_point	ggplot	not_cancelled
+unnamed-chunk-27	%>%	==	aes	arr_delay	carrier	dest	filter	geom_point	ggplot	not_cancelled
