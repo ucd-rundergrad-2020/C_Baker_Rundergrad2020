@@ -1,0 +1,16 @@
+unnamed-chunk-1	library
+unnamed-chunk-2	%>%	diamonds	select	summary	x	y	z
+unnamed-chunk-3	%>%	aes	c	coord_cartesian	diamonds	geom_histogram	ggplot	x	y	z
+unnamed-chunk-4	%>%	aes	diamonds	geom_point	ggplot	scale_color_viridis	x	y	z
+unnamed-chunk-5	%>%	aes	c	coord_cartesian	diamonds	geom_point	ggplot	scale_color_viridis	x	y	z
+unnamed-chunk-6	%>%	diamonds	price	select	summary
+unnamed-chunk-7	%>%	aes	diamonds	geom_histogram	ggplot	price
+unnamed-chunk-8	%>%	aes	c	coord_cartesian	diamonds	geom_histogram	ggplot	price
+unnamed-chunk-9	%>%	c	carat	count	diamonds	filter	group_by	select
+unnamed-chunk-10	%>%	aes	c	carat	coord_cartesian	diamonds	geom_histogram	ggplot	xlim
+unnamed-chunk-11	aes	air_time	c	color	flights	geom_bar	geom_histogram	ggplot	rep	sample	tibble
+unnamed-chunk-12	c	mean	rep	sample	seq	sum
+unnamed-chunk-13	%>%	~	aes	dep_time	facet_wrap	flights	geom_freqpoly	ggplot	is.na	mutate	sched_dep_time	sched_hour	sched_min
+unnamed-chunk-14	~	aes	carat	cut	diamonds	facet_wrap	geom_boxplot	geom_point	ggplot	price
+unnamed-chunk-15	aes	class	coord_flip	geom_boxplot	geom_boxploth	ggplot	hwy	library	mpg
+unnamed-chunk-16	~	aes	carat	cut	diamonds	facet_grid	geom_freqpoly	geom_histogram	geom_violin	ggplot
