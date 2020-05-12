@@ -1,0 +1,51 @@
+---
+title: "Dull560 LUC Analysis"
+author: "Cassandra"
+date: "5/12/2020"
+output: 
+  html_document: 
+    keep_md: yes
+editor_options: 
+  chunk_output_type: console
+---
+
+```{r, message = FALSE}
+library(tidyverse)
+```
+
+**Load the data** 
+```{r}
+Dull560_luc <- read.csv("Dull 560_All_Results.csv")
+head(Dull560_luc)
+```
+
+**Look at circadian metrics only** 
+```{r}
+brass_output <- Dull560_luc %>% select(Region:RAE)
+summary(brass_output)
+```
+
+**Period and RAE graph**  
+```{r}
+# filter for plants with RAE <= 0.6
+rhythmic <- brass_output %>% filter(RAE <= 0.6)
+summary(rhythmic)
+# calculate mean period per genotype
+mean_per <- rhythmic %>% group_by(Genotype) %>% 
+  summarise(mean(Period), mean(RAE))
+mean_per
+colnames(mean_per) <- c("Genotype", "per", "rae")
+# round numbers 
+mean_per <- mean_per %>% mutate(
+  per_round = signif(per, 3),
+  rae_round = signif(rae, 3)
+)
+
+ggplot(brass_output) + 
+  geom_point(aes(Period, RAE, color = Genotype)) + 
+  facet_grid(Genotype ~ .) + 
+  geom_hline(aes(yintercept = 0.6), linetype = "dashed") + 
+  geom_text(data = mean_per, aes(x = 18, y = 0.4, label = per_round), color = "black") + 
+  geom_text(data = mean_per, aes(x = 33, y = 0.4, label = rae_round), color = "black")
+```
+
