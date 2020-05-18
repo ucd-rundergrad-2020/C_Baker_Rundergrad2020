@@ -1,0 +1,192 @@
+---
+title: "Week 5 Problems"
+author: "Cassandra"
+date: "5/18/2020"
+output: 
+  html_document: 
+    keep_md: yes
+editor_options: 
+  chunk_output_type: console
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(cache = TRUE, autodep = TRUE)
+```
+
+```{r, message = FALSE}
+library(tidyverse)
+```
+
+## Chapter 10 
+
+You can use `.` in a pipe as a placeholder!   
+```{r}
+diamonds %>% filter(carat > 4) %>% .$carat
+```
+
+### Exercises 
+
+#### 10.5 
+
+**1. How can you tell if an object is a tibble? (Hint: try printing `mtcars`, which is a regular data frame).** 
+```{r}
+print(mtcars)
+print(diamonds)
+```
+
+**2. Compare and contrast the following operations on a `data.frame` and equivalent tibble. What is different? Why might the default data frame behaviours cause you frustration?**   
+```{r}
+# make test data frame
+df <- data.frame(abc = 1, xyz = "a")
+# make test tibble
+tib <- tibble(abc = 1, xyz = "a")
+```
+
+```{r}
+df$x
+tib$x
+```
+The data frame lets you do this even though it doesn't match the column name, which may lead to you working with the wrong column on accident. 
+
+```{r}
+df[, "xyz"]
+tib[, "xyz"]
+```
+With a tibble the output is also a tibble and is visually more pleasing. I kind of like how the data frame gives you the factor levels though. 
+
+```{r}
+df[, c("abc", "xyz")]
+tib[, c("abc", "xyz")]
+```
+Again, the tibble outputs a tibble.
+
+**4. Practice referring to non-syntactic names in the following data frame by:**  
+
+  1. Extracting the variable called 1.   
+  2. Plotting a scatterplot of 1 vs 2.    
+  3. Creating a new column called 3 which is 2 divided by 1.    
+  4. Renaming the columns to one, two and three.   
+  
+```{r}
+annoying <- tibble(
+  `1` = 1:10,
+  `2` = `1` * 2 + rnorm(length(`1`))
+)
+```
+
+```{r}
+# extract variable 1
+annoying$`1`
+annoying %>% select(`1`)
+```
+
+```{r}
+# plot scatterplot of 1 vs 2
+annoying %>% 
+  ggplot(aes(`1`, `2`)) + 
+  geom_point()
+```
+
+```{r}
+# create column called 3, which is 2 divided by 1 
+(annoying <- annoying %>% 
+  mutate(
+    `3` = `2`/`1`
+  ))
+```
+
+```{r}
+# rename columns to one, two, and three
+annoying %>% 
+  rename(
+    one = `1`, 
+    two = `2`, 
+    three = `3`
+  )
+```
+
+**5. What does `tibble::enframe()` do? When might you use it?**   
+
+`enframe()` creates tibbles from vectors. This would be useful if you had multiple vectors you wanted to combine together into one data frame/tibble. 
+
+## Chapter 11 
+
+### Exercises 
+
+#### 11.2.2 
+
+**1. What function would you use to read a file where fields were separated with “|”?**   
+```{r}
+read_delim("a|b|c
+1|2|3
+4|5|6", delim = "|")
+```
+
+**4. Sometimes strings in a CSV file contain commas. To prevent them from causing problems they need to be surrounded by a quoting character, like `"` or `'`. By default, `read_csv()` assumes that the quoting character will be `"`. What argument to `read_csv()` do you need to specify to read the following text into a data frame?**   
+```{r}
+read_csv("x,y\n1,'a,b'", quote = "'")
+```
+
+**5. Identify what is wrong with each of the following inline CSV files. What happens when you run the code?** 
+```{r}
+# missing a third column header 
+read_csv("a,b\n1,2,3\n4,5,6")
+
+# has three column headers, but only two values in the first row and four values in the second row 
+read_csv("a,b,c\n1,2\n1,2,3,4")
+
+# missing a value for the second column 
+read_csv("a,b\n\"1")
+
+# not sure what they were going for here? maybe need quotes around values to have "a,b" as one value?
+read_csv("a,b\n1,2\na,b")
+
+# use read_csv2?
+read_csv("a;b\n1;3")
+```
+
+#### 11.3.5
+
+**1. What are the most important arguments to `locale()`?**    
+Most important seems subjective, but there are definitely a lot of useful settings in here!
+
+**2. What happens if you try and set `decimal_mark` and `grouping_mark` to the same character? What happens to the default value of `grouping_mark` when you set `decimal_mark` to `“,”`? What happens to the default value of `decimal_mark` when you set the `grouping_mark` to `“.”`?**    
+```{r}
+# locale(decimal_mark = ".", grouping_mark = ".")
+# "decimal_mark and grouping_mark must be different)
+
+parse_number("$123.456,50", locale = locale(decimal_mark = ","))
+parse_number("$123.456,50", locale = locale(grouping_mark = "."))
+```
+
+`decimal_mark` and `grouping_mark` will just automatically switch with each other. 
+
+**3. I didn’t discuss the `date_format` and `time_format` options to `locale()`. What do they do? Construct an example that shows when they might be useful.**    
+
+`date_format` sets the default date format and `time_format` sets the default time format.  
+```{r}
+parse_date("05 January 2010", locale = locale(date_format = "%d %B %Y"))
+parse_time("1330", locale = locale(time_format = "%H%M"))
+```
+
+**7. Generate the correct format string to parse each of the following dates and times:** 
+```{r}
+d1 <- "January 1, 2010"
+d2 <- "2015-Mar-07"
+d3 <- "06-Jun-2017"
+d4 <- c("August 19 (2015)", "July 1 (2015)")
+d5 <- "12/30/14" # Dec 30, 2014
+t1 <- "1705"
+t2 <- "11:15:10.12 PM"
+```
+
+```{r}
+parse_date(d1, "%B %d, %Y")
+parse_date(d2, "%Y-%b-%d")
+parse_date(d3, "%d-%b-%Y")
+parse_date(d4, "%B %d (%Y)")
+parse_date(d5, "%m/%d/%y")
+parse_time(t1, "%H%M")
+parse_time(t2, "%I:%M:%OS %p")
+```
+

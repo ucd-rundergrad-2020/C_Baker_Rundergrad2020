@@ -1,0 +1,19 @@
+unnamed-chunk-1	library
+unnamed-chunk-2	$	%>%	.	>	carat	diamonds	filter
+unnamed-chunk-3	diamonds	mtcars	print
+unnamed-chunk-4	data.frame	tibble
+unnamed-chunk-5	$	df	tib
+unnamed-chunk-6	df	tib
+unnamed-chunk-7	c	df	tib
+unnamed-chunk-8	1	length	rnorm	tibble
+unnamed-chunk-9	$	%>%	1	annoying	select
+unnamed-chunk-10	%>%	1	2	aes	annoying	geom_point	ggplot
+unnamed-chunk-11	%>%	1	2	mutate
+unnamed-chunk-12	%>%	1	2	3	annoying	rename
+unnamed-chunk-13	read_delim
+unnamed-chunk-14	read_csv
+unnamed-chunk-15	read_csv
+unnamed-chunk-16	locale	parse_number
+unnamed-chunk-17	locale	parse_date	parse_time
+unnamed-chunk-18	c
+unnamed-chunk-19	d1	d2	d3	d4	d5	parse_date	parse_time	t1	t2
