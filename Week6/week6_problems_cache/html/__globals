@@ -1,0 +1,19 @@
+unnamed-chunk-1	library
+unnamed-chunk-2	$	%>%	==	arrange	country	filter	length	rbind	rep	rep_len	table2	tibble	type	unique	year
+unnamed-chunk-3	$	table4a	table4b	tibble
+unnamed-chunk-4	%>%	==	aes	count	country	filter	geom_line	geom_point	ggplot	table2	type	year	ylab
+unnamed-chunk-5	%>%	2015	2016	c	pivot_longer	pivot_wider	return	tibble	year
+unnamed-chunk-6	%>%	2015	2016	double	list	pivot_longer	pivot_wider	return	stocks	year
+unnamed-chunk-7	%>%	1999	2000	c	pivot_longer	table4a
+unnamed-chunk-8	~	tribble
+unnamed-chunk-9	%>%	names	people	pivot_wider	values
+unnamed-chunk-10	%>%	c	mutate	names	people	pivot_wider	values
+unnamed-chunk-11	~	tribble
+unnamed-chunk-12	%>%	c	pivot_longer	preg
+unnamed-chunk-13	%>%	c	separate	tibble	x
+unnamed-chunk-14	%>%	c	separate	tibble	x
+unnamed-chunk-15	%>%	separate	table3	year
+unnamed-chunk-16	%>%	::	c	iso2	iso3	key	mutate	new	new_sp_m014	newrel_f65	pivot_longer	select	separate	sexage	who
+unnamed-chunk-17	%>%	>	count	country	filter	n	select	unique	who
+unnamed-chunk-18	%>%	~	aes	cases	count	country	facet_wrap	geom_line	geom_point	ggplot	n	sex	theme	who_tidy	year
+unnamed-chunk-19	%>%	~	aes	cases	count	country	facet_wrap	geom_line	geom_point	ggplot	n	sex	who_tidy	year
