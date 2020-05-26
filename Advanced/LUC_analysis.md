@@ -351,3 +351,46 @@ lum_loop %>%
 
 ![](LUC_analysis_files/figure-html/unnamed-chunk-11-1.png)<!-- -->
 
+
+```r
+se <- function(x) {
+  sd(x) / sqrt(length(x))
+}
+
+# standard error of gt * zt
+lum_error <- trace %>% group_by(Genotype, ZT) %>% 
+  summarise(
+    avg_lum = mean(lum),
+    se_lum = se(lum)
+  )
+head(lum_error)
+```
+
+```
+## # A tibble: 6 x 4
+## # Groups:   Genotype [1]
+##   Genotype       ZT avg_lum se_lum
+##   <fct>       <dbl>   <dbl>  <dbl>
+## 1 8x T2 95.01    36 439930. 13845.
+## 2 8x T2 95.01    38 434497. 13761.
+## 3 8x T2 95.01    40 440297. 14051.
+## 4 8x T2 95.01    42 449409. 14469.
+## 5 8x T2 95.01    44 455283. 14833.
+## 6 8x T2 95.01    46 453961. 14648.
+```
+
+
+```r
+# what does this look like without scaling? 
+lum_error %>% 
+  ggplot(aes(ZT, avg_lum, color = Genotype)) +
+  geom_point() +
+  geom_line() + 
+  geom_errorbar(aes(ymin = avg_lum - se_lum, ymax = avg_lum + se_lum), width = 0.1, size = 0.8) + 
+  labs(title = "8X T2 LUC assay",
+       subtitle = "Dull 560") + 
+  ylab("Luminescence")
+```
+
+![](LUC_analysis_files/figure-html/unnamed-chunk-13-1.png)<!-- -->
+
