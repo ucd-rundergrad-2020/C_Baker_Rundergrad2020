@@ -1,0 +1,221 @@
+---
+title: "Functions + Loops"
+author: "Cassandra"
+date: "5/18/2020"
+output: html_document
+editor_options: 
+  chunk_output_type: console
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(cache = TRUE, autodep = TRUE)
+```
+
+```{r, message = FALSE}
+library(tidyverse)
+library(lubridate)
+library(nycflights13)
+```
+
+
+## Chapter 19 
+
+### 19.2.1 
+
+**3. Practice turning the following code snippets into functions. Think about what each function does. What would you call it? How many arguments does it need? Can you rewrite it to be more expressive or less duplicative?** 
+```
+mean(is.na(x))
+
+x / sum(x, na.rm = TRUE)
+
+sd(x, na.rm = TRUE) / mean(x, na.rm = TRUE)
+```
+
+```{r}
+test_vector <- sample(c(rnorm(20), rep(NA, 40)))
+test_numbers <- sample(1:100, size = 20)
+
+prop_missing <- function(x) {
+  mean(is.na(x))
+}
+
+prop_missing(test_vector)
+prop_missing(test_numbers)
+```
+
+```{r}
+prop_rescale <- function(x) {
+  x / sum(x, na.rm = TRUE)
+}
+
+prop_rescale(test_vector)
+prop_rescale(test_numbers)
+```
+
+```{r}
+coeff_var <- function(x) {
+  sd(x, na.rm = TRUE) / mean(x, na.rm = TRUE)
+}
+
+coeff_var(test_vector)
+coeff_var(test_numbers)
+```
+
+### 19.4.4
+
+**2. Write a greeting function that says “good morning”, “good afternoon”, or “good evening”, depending on the time of day. (Hint: use a time argument that defaults to `lubridate::now()`. That will make it easier to test your function.)**    
+```{r}
+greeting <- function(x) {
+  time <- as.integer(format(now(), "%H%M"))
+  if (time < 1200) {
+    print("Good morning")
+  } else if (time >= 1700) {
+    print("Good evening") 
+  } else {
+    print("Good afternoon")
+  }
+}
+
+now()
+greeting()
+```
+
+**3. Implement a `fizzbuzz` function. It takes a single number as input. If the number is divisible by three, it returns “fizz”. If it’s divisible by five it returns “buzz”. If it’s divisible by three and five, it returns “fizzbuzz”. Otherwise, it returns the number. Make sure you first write working code before you create the function.**   
+```{r}
+fizzbuzz <- function(x) {
+  three <- x%%3 == 0 
+  five <- x%%5 == 0 
+  if (three == TRUE && five == FALSE) {
+    print("fizz")
+  } else if (three == FALSE && five == TRUE) {
+    print("buzz")
+  } else if (three == TRUE && five == TRUE) {
+    print("fizzbuzz")
+  } else {
+    print(x)
+  }
+}
+
+fizzbuzz(30)
+fizzbuzz(25)
+fizzbuzz(21)
+fizzbuzz(7)
+```
+
+## Chapter 21
+
+### 21.2.1    
+
+**1. Write for loops to:**
+
+  1. Compute the mean of every column in mtcars.
+  2. Determine the type of each column in nycflights13::flights.
+  3. Compute the number of unique values in each column of iris.
+  4. Generate 10 random normals from distributions with means of -10, 0, 10, and 100.  
+  
+**Think about the output, sequence, and body before you start writing the loop.**     
+```{r}
+# 1. compute the mean of every column in mtcars 
+col_mean <- vector("double", ncol(mtcars)) 
+for (i in seq_along(mtcars)) {
+  col_mean[[i]] <- mean(mtcars[[i]])
+}
+col_mean
+
+# can it be prettier? 
+cars_mean <- tibble(
+  col = colnames(mtcars),
+  col_mean = vector("double", length = ncol(mtcars))
+)
+
+for (i in seq_along(mtcars)) {
+  cars_mean$col_mean[[i]] <- mean(mtcars[[i]])
+}
+cars_mean
+# the numbers aren't pretty, but it's nice to have the column names... 
+```
+
+```{r}
+# 2. determine the type of each column in flights 
+col_type <- vector("character", ncol(flights))
+for (i in seq_along(flights)) {
+  col_type[[i]] <- typeof(flights[[i]])
+}
+col_type
+
+# add some names too 
+flights_type <- tibble(
+  col = colnames(flights),
+  col_type = vector("character", length = ncol(flights))
+)
+
+for (i in seq_along(flights)) {
+  flights_type$col_type[[i]] <- typeof(flights[[i]])
+}
+flights_type
+```
+
+### 21.3.5 
+
+**3. Write a function that prints the mean of each numeric column in a data frame, along with its name. For example, `show_mean(iris)` would print:** 
+```
+show_mean(iris)
+#> Sepal.Length: 5.84
+#> Sepal.Width:  3.06
+#> Petal.Length: 3.76
+#> Petal.Width:  1.20
+```
+
+```{r}
+# preliminary function to get numeric column names and means 
+find_mean <- function(df) {
+  num_col <- select_if(df, is.numeric)
+  avg <- vector("double", length = ncol(num_col))
+  names(avg) <- names(num_col)
+  for (i in seq_along(num_col)) {
+    avg[[i]] <- mean(num_col[[i]])
+  }
+  avg
+}
+
+find_mean(iris)
+
+# trying to match R4DS output
+show_mean <- function(df) {
+  num_col <- select_if(df, is.numeric)
+  avg <- tibble(
+    col_name = names(num_col),
+    col_mean = NA
+  )
+  for (i in seq_along(num_col)) {
+    avg$col_mean[[i]] <- round(mean(num_col[[i]]), digits = 2)
+  }
+  for (i in seq_along(num_col)) {
+    cat(avg$col_name[[i]], ": \t", avg$col_mean[[i]], "\n")
+  }
+}
+
+show_mean(iris)
+# eh this is good enough for me
+```
+
+### 21.5.3    
+
+**1. Write code that uses one of the map functions to:** 
+
+  1. Compute the mean of every column in mtcars.
+  2. Determine the type of each column in nycflights13::flights.
+  3. Compute the number of unique values in each column of iris.
+  4. Generate 10 random normals from distributions with means of -10, 0, 10, and 100.    
+  
+```{r}
+# 1. compute the mean of every column in mtcars 
+map_dbl(mtcars, mean)
+# wow, so fast 
+```
+
+```{r}
+# 2. determine the type of each column in flights
+map_chr(flights, typeof)
+```
+
