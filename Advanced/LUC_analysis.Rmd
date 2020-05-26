@@ -11,11 +11,13 @@ editor_options:
 
 ```{r, message = FALSE}
 library(tidyverse)
+library(cowplot)
+theme_set(theme_cowplot())
 ```
 
 **Load the data** 
 ```{r}
-Dull560_luc <- read.csv("Dull 560_All_Results.csv")
+Dull560_luc <- read_csv("Dull 560_All_Results.csv")
 head(Dull560_luc)
 ```
 
@@ -47,5 +49,122 @@ ggplot(brass_output) +
   geom_hline(aes(yintercept = 0.6), linetype = "dashed") + 
   geom_text(data = mean_per, aes(x = 18, y = 0.4, label = per_round), color = "black") + 
   geom_text(data = mean_per, aes(x = 33, y = 0.4, label = rae_round), color = "black")
+```
+
+**Luminescence vs Time Graph**    
+```{r}
+# format data
+trace <- Dull560_luc %>% select(-c(`12`:`34`))
+head(trace)
+trace <- trace %>% 
+  pivot_longer(c(`36`:`176`), names_to = "ZT", values_to = "lum") %>% 
+  mutate(
+    Region = as.factor(Region),
+    Genotype = as.factor(Genotype),
+    ZT = as.numeric(ZT)
+  )
+```
+
+```{r}
+# avg lum by gt * zt
+lum_avg <- trace %>% group_by(Genotype, ZT) %>% 
+  summarise(avg_lum = mean(lum))
+head(lum_avg)
+```
+
+```{r}
+# background subtraction 
+min(lum_avg$avg_lum)
+bg = 78000
+
+lum_avg <- lum_avg %>% mutate(
+  bg_sub = avg_lum - bg
+)
+```
+
+```{r}
+# scale luminescence 
+
+# grouped 
+lum_avg <- lum_avg %>%
+  group_by(Genotype) %>% 
+  mutate(
+    scale_lum = bg_sub / max(bg_sub)
+  )
+
+lum_avg %>% group_by(Genotype) %>% summarise(min_lum = min(scale_lum))
+# seems to be different per genotype
+```
+
+```{r}
+# graph using grouped method 
+lum_avg %>% 
+  ggplot(aes(ZT, scale_lum, color = Genotype)) +
+  geom_point() +
+  geom_line() + 
+  labs(title = "8X T2 LUC assay",
+       subtitle = "Dull 560") + 
+  ylab("Scaled Luminescence")
+
+# ugh, way faster than my previous loop method 
+```
+
+```{r}
+# scale luminescence 
+
+# looped 
+lum_loop <- lum_avg %>% 
+  select(-scale_lum) %>% 
+  mutate(max_lum = NA)
+
+for (i in 1:nrow(lum_loop)) {
+  select <- filter(lum_loop, Genotype == lum_loop$Genotype[[i]])
+  lum_loop$max_lum[[i]] <- max(select$bg_sub)
+}
+
+head(lum_loop)
+lum_loop <- lum_loop %>% 
+  mutate(
+    scale_lum = bg_sub / max_lum
+  )
+
+lum_loop %>% group_by(Genotype) %>% summarise(min_lum = min(scale_lum))
+```
+
+```{r}
+# graph using looped method 
+lum_loop %>% 
+  ggplot(aes(ZT, scale_lum, color = Genotype)) +
+  geom_point() +
+  geom_line() + 
+  labs(title = "8X T2 LUC assay",
+       subtitle = "Dull 560") + 
+  ylab("Scaled Luminescence")
+```
+
+```{r}
+se <- function(x) {
+  sd(x) / sqrt(length(x))
+}
+
+# standard error of gt * zt
+lum_error <- trace %>% group_by(Genotype, ZT) %>% 
+  summarise(
+    avg_lum = mean(lum),
+    se_lum = se(lum)
+  )
+head(lum_error)
+```
+
+```{r}
+# what does this look like without scaling? 
+lum_error %>% 
+  ggplot(aes(ZT, avg_lum, color = Genotype)) +
+  geom_point() +
+  geom_line() + 
+  geom_errorbar(aes(ymin = avg_lum - se_lum, ymax = avg_lum + se_lum), width = 0.1, size = 0.8) + 
+  labs(title = "8X T2 LUC assay",
+       subtitle = "Dull 560") + 
+  ylab("Luminescence")
 ```
 
