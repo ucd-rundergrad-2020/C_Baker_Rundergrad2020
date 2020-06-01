@@ -1,0 +1,13 @@
+unnamed-chunk-1	library	theme_cowplot	theme_set
+unnamed-chunk-2	airports	flights	head
+unnamed-chunk-3	airports	head	weather
+unnamed-chunk-4	%>%	everything	flights	head	key	mutate	row_number	select
+unnamed-chunk-5	%>%	>	Batting	count	filter	head	library	n	playerID	stint	yearID
+unnamed-chunk-6	%>%	>	babynames	count	filter	head	library	n	name	sex	year
+unnamed-chunk-7	%>%	aes	airports	arr_delay	arrival	borders	c	coord_quickmap	dep_delay	departure	dest	flights	geom_point	ggplot	group_by	lat	left_join	lon	mean	summarise
+unnamed-chunk-8	%>%	airports	c	dest	dest_lat	dest_lon	everything	faa	flights	lat	left_join	lon	origin	origin_lat	origin_lon	rename	select
+unnamed-chunk-9	!=	%>%	>=	count	filter	flights	n	semi_join	tailnum
+unnamed-chunk-10	%>%	arrange	day	delay	dep_delay	desc	everything	flights	group_by	head	hour	left_join	mean	month	origin	precip	select	summarise	summary	temp	visib	weather	wind_speed	year
+unnamed-chunk-11	aes	class	cty	geom_point	ggplot	hwy	labs	mpg
+unnamed-chunk-12	aes	coord_fixed	geom_hex	ggplot	rnorm	scale_fill_gradient	tibble	x	y
+unnamed-chunk-13	aes	carat	cut	diamonds	geom_point	ggplot	guide_legend	guides	list	price

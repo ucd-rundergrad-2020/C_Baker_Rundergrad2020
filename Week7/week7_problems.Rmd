@@ -1,0 +1,215 @@
+---
+title: "Week 7 Problems"
+author: "Cassandra"
+date: "5/26/2020"
+output: 
+  html_document: 
+    keep_md: yes
+editor_options: 
+  chunk_output_type: console
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(cache = TRUE, autodep = TRUE)
+```
+
+```{r, message = FALSE}
+library(tidyverse)
+library(nycflights13)
+library(cowplot) 
+theme_set(theme_cowplot())
+library(hexbin)
+```
+
+## Chapter 13 
+
+### 13.2.1 
+
+**1. Imagine you wanted to draw (approximately) the route each plane flies from its origin to its destination. What variables would you need? What tables would you need to combine?**
+```{r}
+head(airports)
+head(flights)
+```
+
+You would need the location of each airport, so `lat` and `lon` from `airports` along with `faa`. You would also need the `origin` and `dest` from `flights`, which corresponds with `faa` from `airports`. You would need to combine `flights` and `airports`. 
+
+**2. I forgot to draw the relationship between weather and airports. What is the relationship and how should it appear in the diagram?**     
+```{r}
+head(weather)
+head(airports)
+```
+
+`airports` connects to `weather` through `faa`, which corresponds to `origin` in `weather`. This should be portrayed as an arrow between `faa` and `origin`. 
+
+**3. `weather` only contains information for the origin (NYC) airports. If it contained weather records for all airports in the USA, what additional relation would it define with `flights`?**      
+
+`dest` would also be defined with `flights`. 
+
+**4. We know that some days of the year are “special”, and fewer people than usual fly on them. How might you represent that data as a data frame? What would be the primary keys of that table? How would it connect to the existing tables?** 
+
+You could make a `holidays` data frame that includes `name`, `month`, and `day`. The primary keys would be `month` and `day`, which is how it would connect to `flights` and `weather`. 
+
+### 13.3.1
+
+**1. Add a surrogate key to `flights`.**    
+
+```{r}
+flights2 <- flights %>% mutate(
+  key = row_number()
+)
+
+flights2 %>% select(key, everything()) %>% head()
+```
+
+**2. Identify the keys in the following datasets:**    
+
+  1. Lahman::Batting,
+  2. babynames::babynames
+  
+**(You might need to install some packages and read some documentation.)** 
+
+```{r}
+library(Lahman)
+head(Batting)
+Batting %>% count(playerID, yearID, stint) %>% filter(n > 1)
+```
+```{r}
+library(babynames)
+head(babynames)
+babynames %>% count(year, sex, name) %>% filter(n > 1)
+```
+
+### 13.4.6 
+
+**1. Compute the average delay by destination, then join on the `airports` data frame so you can show the spatial distribution of delays. Here’s an easy way to draw a map of the United States:**  
+```
+airports %>%
+  semi_join(flights, c("faa" = "dest")) %>%
+  ggplot(aes(lon, lat)) +
+    borders("state") +
+    geom_point() +
+    coord_quickmap()
+```
+**(Don’t worry if you don’t understand what semi_join() does — you’ll learn about it next.)**    
+**You might want to use the size or colour of the points to display the average delay for each airport.**     
+```{r}
+# compute average delay by destination
+avg_delay <- flights %>% 
+  group_by(dest) %>% 
+  summarise(
+    arrival = mean(arr_delay, na.rm = TRUE),
+    departure = mean(dep_delay, na.rm = TRUE))
+
+# join on airports 
+avg_delay %>% 
+  left_join(airports, c("dest" = "faa")) %>% 
+  ggplot(aes(lon, lat)) +
+    borders("state") +
+    geom_point(aes(color = arrival)) +
+    coord_quickmap()
+
+avg_delay %>% 
+  left_join(airports, c("dest" = "faa")) %>% 
+  ggplot(aes(lon, lat)) +
+    borders("state") +
+    geom_point(aes(color = departure)) +
+    coord_quickmap()
+```
+
+**2. Add the location of the origin *and* destination (i.e. the `lat` and `lon`) to `flights`.**  
+
+```{r}
+location <- airports %>% 
+  select(faa, lat, lon)
+
+flights %>% 
+  left_join(location, c("dest" = "faa")) %>% 
+  rename(dest_lat = lat,
+         dest_lon = lon) %>% 
+  left_join(location, c("origin" = "faa")) %>% 
+  rename(origin_lat = lat,
+         origin_lon = lon) %>% 
+  select(origin, origin_lat, origin_lon, dest, dest_lat, dest_lon, everything())
+```
+
+### 13.5.1 
+
+**2. Filter flights to only show flights with planes that have flown at least 100 flights.**    
+
+```{r}
+most_flown <- flights %>% 
+  filter(tailnum != "NA") %>% 
+  count(tailnum, sort = TRUE) %>% 
+  filter(n >= 100)
+
+flights %>% 
+  semi_join(most_flown)
+```
+
+**4. Find the 48 hours (over the course of the whole year) that have the worst delays. Cross-reference it with the `weather` data. Can you see any patterns?**      
+
+```{r}
+worst_delay <- flights %>% 
+  group_by(year, month, day, hour) %>% 
+  summarise(delay = mean(dep_delay, na.rm = TRUE)) %>% 
+  arrange(desc(delay)) %>% 
+  head(48)
+
+weather_delay <- worst_delay %>% 
+  left_join(weather) %>% 
+  select(year, month, day, hour, delay, origin, temp, wind_speed, precip, visib, everything())
+
+summary(weather_delay)
+summary(weather)
+```
+
+## Chapter 28
+
+### 28.2.1 
+
+**1. Create one plot on the fuel economy data with customised `title`, `subtitle`, `caption`, `x`, `y`, and `colour` labels.**      
+
+```{r}
+ggplot(mpg) + 
+  geom_point(aes(cty, hwy, color = class)) + 
+  labs(
+    title = "City mpg and highway mpg are highly correlated",
+    subtitle = "SUV and pickups have the worst mpg",
+    caption = "Data from fueleconomy.gov",
+    x = "City Fuel Economy (mpg)",
+    y = "Highway Fuel Economy (mpg)",
+    color = "Car Class"
+  )
+```
+
+### 28.4.4
+
+**1. Why doesn’t the following code override the default scale?**    
+```
+ggplot(df, aes(x, y)) +
+  geom_hex() +
+  scale_colour_gradient(low = "white", high = "red") +
+  coord_fixed()
+``` 
+I'm guessing the gradient scaling is actually controlled by `fill` and not `color`? 
+
+```{r}
+df <- tibble(
+  x = rnorm(10000),
+  y = rnorm(10000)
+)
+
+ggplot(df, aes(x, y)) +
+  geom_hex() +
+  scale_fill_gradient(low = "white", high = "red") +
+  coord_fixed()
+```
+
+**4. Use `override.aes` to make the legend on the following plot easier to see.**    
+
+```{r}
+ggplot(diamonds, aes(carat, price)) +
+  geom_point(aes(colour = cut), alpha = 1/20) + 
+  guides(color = guide_legend(override.aes = list(alpha = 1)))
+```
+
