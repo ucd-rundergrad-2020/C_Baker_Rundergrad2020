@@ -1,0 +1,70 @@
+---
+title: "Hypocotyl Elongation Analysis"
+author: "Cassandra"
+date: "6/2/2020"
+output: 
+  html_document: 
+    keep_md: yes
+editor_options: 
+  chunk_output_type: console
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(cache = TRUE, autodep = TRUE)
+```
+
+```{r, message = FALSE}
+library(tidyverse)
+library(cowplot) 
+theme_set(theme_cowplot())
+```
+
+## Check out Data 
+
+```{r}
+hyp <- read_csv("hypocotyl_elongation_data_rclub.csv")
+
+# remove extra column
+hyp <- hyp %>% select(-X12)
+summary(hyp)
+
+# set factors
+hyp <- hyp %>% 
+  rename(image_used = `image used`) %>% 
+  mutate(
+    genotype = as_factor(genotype),
+    treatment = as_factor(treatment),
+    image_used = as_factor(image_used)
+)
+
+# too many rows for some reason 
+hyp <- hyp %>% 
+  filter(number != "NA")
+
+summary(hyp)
+```
+
+## Hypocotyl Length Plots
+
+```{r}
+ggplot(hyp, aes(genotype, hypocotyl_length)) + 
+  geom_boxplot(aes(fill = treatment)) + 
+  facet_grid(. ~ treatment)
+```
+
+## Data Analysis 
+
+```{r}
+model_simple <- lm(hyp$hypocotyl_length ~ hyp$genotype)
+summary(model_simple)
+anova(model_simple)
+
+model_noint <- lm(hyp$hypocotyl_length ~ hyp$genotype + hyp$treatment)
+summary(model_noint)
+anova(model_noint)
+
+model_int <- lm(hyp$hypocotyl_length ~ hyp$genotype * hyp$treatment)
+summary(model_int)
+anova(model_int)
+```
+
